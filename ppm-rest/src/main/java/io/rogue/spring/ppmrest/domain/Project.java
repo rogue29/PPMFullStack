@@ -1,6 +1,7 @@
 package io.rogue.spring.ppmrest.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
+@Validated
 public class Project {
 
     @Id
