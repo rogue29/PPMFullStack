@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/project")
+@CrossOrigin
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -29,10 +30,21 @@ public class ProjectController {
         return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getByProjectIdentifier(@PathVariable String id) {
+    @GetMapping("/{projectId}")
+    public ResponseEntity<?> getByProjectIdentifier(@PathVariable String projectId) {
 
-        Project project = projectService.getByProjectIdentifier(id);
+        Project project = projectService.getByProjectIdentifier(projectId);
         return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public Iterable<Project> getAllProjects() {
+        return projectService.getAllProjects();
+    }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<?> deleteByProjectIdentifier(@PathVariable String projectId) {
+        projectService.deleteByProjectIdentifier(projectId);
+        return new ResponseEntity<String>("Project deleted.", HttpStatus.ACCEPTED);
     }
 }
