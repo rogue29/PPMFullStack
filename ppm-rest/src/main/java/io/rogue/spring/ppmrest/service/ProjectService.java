@@ -1,7 +1,9 @@
 package io.rogue.spring.ppmrest.service;
 
+import io.rogue.spring.ppmrest.domain.Backlog;
 import io.rogue.spring.ppmrest.domain.Project;
 import io.rogue.spring.ppmrest.exception.ProjectIdException;
+import io.rogue.spring.ppmrest.repository.BacklogRepository;
 import io.rogue.spring.ppmrest.repository.ProjectRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +13,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectService {
 
-    public static final Logger log = LoggerFactory.getLogger(ProjectService.class);
+    public static final Logger LOG = LoggerFactory.getLogger(ProjectService.class);
 
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private BacklogRepository backlogRepository;
+
     public Project saveOrUpdateProject(Project project) {
-        log.info(project.toString());
+        LOG.info(project.toString());
         try {
-            project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            String projectIdentifier = project.getProjectIdentifier().toUpperCase();
+            project.setProjectIdentifier(projectIdentifier);
+            if (project.getId() == null) {
+                LOG.info("Creating backlog for project - " + projectIdentifier);
+                Backlog backlog = new Backlog();
+                backlog.setProjectIdentifier(projectIdentifier);
+                backlog.setProject(project);
+                project.setBacklog(backlog);
+            } else {
+                LOG.info("Project update request for project Id - " + project.getId());
+                project.setBacklog(backlogRepository.findBacklogByProjectIdentifier(projectIdentifier));
+            }
             return projectRepository.save(project);
         } catch (Exception ex) {
             throw new ProjectIdException("Project ID '" + project.getProjectIdentifier() + "' already exists");
@@ -28,7 +44,7 @@ public class ProjectService {
 
     public Project getByProjectIdentifier(String projectId) {
 
-        Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+        Project project = projectRepository.findProjectByProjectIdentifier(projectId.toUpperCase());
         if (project == null) {
             throw new ProjectIdException("Project ID '" + projectId + "'does not exist.");
         }
@@ -40,11 +56,11 @@ public class ProjectService {
     }
 
     public void deleteByProjectIdentifier(String projectId) {
-        Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+        Project project = projectRepository.findProjectByProjectIdentifier(projectId.toUpperCase());
         if (project == null) {
             throw new ProjectIdException("Can not delete project '" + projectId + "'. Project does not exist.");
         }
-        log.info(project.toString());
+        LOG.info(project.toString());
         projectRepository.delete(project);
     }
 }

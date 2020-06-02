@@ -1,6 +1,7 @@
 package io.rogue.spring.ppmrest.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -33,6 +34,18 @@ public class Project {
     private Date created_At;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updated_at;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
+    @JsonIgnore
+    private Backlog backlog;
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
 
     public Project() {
     }
