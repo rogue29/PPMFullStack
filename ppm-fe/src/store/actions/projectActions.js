@@ -22,11 +22,11 @@ const postProjectFailure = data => {
 
 export const postProject = project => {
   return dispatch => {
-    console.log("creating project", project);
+    // console.log("creating project", project);
     axios
       .post("/api/project", project)
       .then(res => {
-        console.log("create project res", res.data);
+        // console.log("create project res", res.data);
         dispatch(postProjectSuccess());
       })
       .catch(err => {
@@ -45,11 +45,11 @@ const storeProjects = projects => {
 
 export const getAllProjects = () => {
   return dispatch => {
-    console.log("get all projects");
+    // console.log("get all projects");
     axios
       .get("/api/project/all")
       .then(res => {
-        console.log("get all projects res ", res.data);
+        // console.log("get all projects res ", res.data);
         dispatch(storeProjects(res.data));
       })
       .catch(err => {
@@ -68,11 +68,11 @@ const storeProject = project => {
 export const getProject = id => {
   return dispatch => {
     dispatch(createProject());
-    console.log("Get project ", id);
+    // console.log("Get project ", id);
     axios
       .get(`/api/project/${id}`)
       .then(res => {
-        console.log("get project res ", res.data);
+        // console.log("get project res ", res.data);
         dispatch(storeProject(res.data));
       })
       .catch(err => {
@@ -88,11 +88,11 @@ const deleteProject = id => ({
 
 export const deleteProjectByIdentifier = id => {
   return dispatch => {
-    console.log("Delete project ", id);
+    // console.log("Delete project ", id);
     axios
       .delete(`/api/project/${id}`)
       .then(res => {
-        console.log("Delete project res ", res.data);
+        // console.log("Delete project res ", res.data);
         dispatch(deleteProject(id));
       })
       .catch(err => {

@@ -5,7 +5,13 @@ import * as actions from "../store/actions/actions";
 
 class ProjectItem extends Component {
   deleteProjectHandler = id => {
-    this.props.deleteProjectByIdentifier(id);
+    if (
+      window.confirm(
+        "Are you sure you want to delete the complete Project? This can't be undone!"
+      )
+    ) {
+      this.props.deleteProjectByIdentifier(id);
+    }
   };
 
   render() {
@@ -22,9 +28,9 @@ class ProjectItem extends Component {
           </div>
           <div className="col-md-4 d-none d-lg-block">
             <ul className="list-group">
-              <a href="/">
+              <Link to={`/backlog/${project.projectIdentifier}`}>
                 <li className="list-group-item board">Project Board</li>
-              </a>
+              </Link>
               <Link to={`/updateProject/${project.projectIdentifier}`}>
                 <li className="list-group-item update">Update Project Info</li>
               </Link>
